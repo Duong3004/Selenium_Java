@@ -23,3 +23,7 @@ Dự án này là một bài thực hành tự động hóa kiểm thử giao di
 2. Mở project bằng Eclipse
 
 3. Chạy test từ file test (sử dụng TestNG)
+## ✅ Tính năng
+Kiểm thử chức năng đăng nhập tự động
+
+Dự kiến mở rộng kiểm thử trên nhiều trình duyệt
