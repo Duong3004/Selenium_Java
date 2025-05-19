@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "testng-1.0.dtd">
+
+<suite name="MyTestSuite" parallel="tests" thread-count="2">
+  <test name="Buoi17TH Tests on firefox">
+      <parameter name="browser" value="firefox"></parameter>
+
+    <classes>
+      <class name="autotest.thuchanh.Buoi17TH" />
+    </classes>
+  </test>
+
+  <test name="Buoi17TH Tests on edge">
+      <parameter name="browser" value="edge"></parameter>
+
+    <classes>
+      <class name="autotest.thuchanh.Buoi17TH" />
+    </classes>
+  </test>
+</suite>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2025-05-18T15:51:28 GMT+07:00" name="Default suite" finished-at="2025-05-18T15:51:35 GMT+07:00" duration-ms="7389">
+    <groups>
+    </groups>
+    <test started-at="2025-05-18T15:51:28 GMT+07:00" name="Default test" finished-at="2025-05-18T15:51:35 GMT+07:00" duration-ms="7389">
+      <class name="autotest.thuchanh.Buoi17TH">
+        <test-method is-config="true" signature="startBrowser(java.lang.String)[pri:0, instance:autotest.thuchanh.Buoi17TH@55183b20]" started-at="2025-05-18T15:51:28 GMT+07:00" name="startBrowser" finished-at="2025-05-18T15:51:33 GMT+07:00" duration-ms="5024" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[edge]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- startBrowser -->
+        <test-method signature="getWWindowHandles()[pri:0, instance:autotest.thuchanh.Buoi17TH@55183b20]" started-at="2025-05-18T15:51:33 GMT+07:00" name="getWWindowHandles" finished-at="2025-05-18T15:51:35 GMT+07:00" duration-ms="2177" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getWWindowHandles -->
+        <test-method is-config="true" signature="closeBrowser()[pri:0, instance:autotest.thuchanh.Buoi17TH@55183b20]" started-at="2025-05-18T15:51:35 GMT+07:00" name="closeBrowser" finished-at="2025-05-18T15:51:35 GMT+07:00" duration-ms="168" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- closeBrowser -->
+      </class> <!-- autotest.thuchanh.Buoi17TH -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
