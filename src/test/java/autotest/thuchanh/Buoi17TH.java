@@ -49,7 +49,7 @@ public class Buoi17TH extends CommonPage {
  	}
 	@BeforeTest
 	@Parameters("browser")
-	public void startBrowser(@Optional("edge") String browser) {
+	public void startBrowser(@Optional("chrome") String browser) {
 //		driver = this.startBrower("https://demo.guru99.com/test/delete_customer.php", KeywordConstant.BROWSER);
 //		driver = this.startBrower("https://demo.automationtesting.in/Alerts.html", KeywordConstant.BROWSER);
 		driver = this.startBrower("https://demo.guru99.com/popup.php", browser);

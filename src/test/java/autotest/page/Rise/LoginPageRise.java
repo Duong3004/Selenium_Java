@@ -20,6 +20,8 @@ public class LoginPageRise extends CommonPage {
 	WebDriver driver;
     WebDriverWait wait;
     JavascriptExecutor js;
+	LoginPageRise login;
+
 	public LoginPageRise(WebDriver driver) {
 		this.driver = driver;
         this.wait = new WebDriverWait(driver,5);  
@@ -27,13 +29,13 @@ public class LoginPageRise extends CommonPage {
         this.js = (JavascriptExecutor) driver;
 
         }
-    @FindBy(id = "email")
+    @FindBy(id = ":r0:")
     WebElement txtUserName;
 
-    @FindBy(id = "password")
+    @FindBy(id = ":r1:")
     WebElement txtPassword;
 
-    @FindBy(xpath = "//button[@type='submit']")
+    @FindBy(id = ":r2:")
     WebElement btnLogin;
 
     @FindBy(xpath = "//div[contains(@class, 'alert alert-danger')]")
@@ -45,13 +47,19 @@ public class LoginPageRise extends CommonPage {
     @FindBy(xpath = "//div[contains(@class, 'form-group has-error')]")
     WebElement ValEmailMsg;
     
+    @FindBy(xpath = "//div[contains(@class, 'p-toast-detail')]")
+    WebElement msgError11; 
+    
+    public String getInfr() {
+ 		return driver.findElement(By.xpath("//a[@title = 'Thông tin cá nhân']")).getText();
+ 	}
+    
     public void login(String username, String password) {
     	 waitt(txtUserName).clear();
     	 waitt(txtUserName).sendKeys(username);
     	 pause(1);
     	 waitt(txtPassword).clear();
     	 waitt(txtPassword).sendKeys(password);
-    	 pause(2);
     	 waitt(btnLogin).click();
   	   
 
@@ -78,6 +86,13 @@ public class LoginPageRise extends CommonPage {
     public WebElement waitt(WebElement element) {
          return wait.until(ExpectedConditions.visibilityOf(element));
 
+    }
+    public String getErrorMsg11() {
+        try {
+            return wait.until(ExpectedConditions.visibilityOf(msgError11)).getText();
+        } catch (Exception e) {
+            return "";  
+        }
     }
     
 }

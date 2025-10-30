@@ -3,12 +3,15 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="autotest.thuchanh.Buoi17TH">
+      <class name="autotest.testcasepage.Rise.AddProjectTest">
         <methods>
-          <include name="getWWindowHandles"/>
+          <include name="addProjectError1"/>
           <include name="startBrowser"/>
+          <include name="addProjectError2"/>
+          <include name="closeBrowser"/>
+          <include name="addProjectSucsess"/>
         </methods>
-      </class> <!-- autotest.thuchanh.Buoi17TH -->
+      </class> <!-- autotest.testcasepage.Rise.AddProjectTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

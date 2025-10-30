@@ -1,6 +1,7 @@
 package autotest.page.Rise;
 
 import autocom.common.CommonPage;
+import autotest.pages.ProjectListPage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ public class CreateProjectPage extends CommonPage {
 	WebDriver driver;
 	WebDriverWait wait;
 	LoginPageRise login;
+
 
 	public CreateProjectPage(WebDriver driver) {
 		this.driver = driver;
@@ -54,22 +56,6 @@ public class CreateProjectPage extends CommonPage {
 		wait.until(ExpectedConditions.elementToBeClickable(addProjectButton)).click();
 	}
 
-//    public void fillProjectForm(String title, boolean includeTitle) {
-//    	if (includeTitle) {
-//            WebElement titleInput = driver.findElement(By.id("title"));
-//            titleInput.clear(); 
-//            titleInput.sendKeys(title);
-//        }
-//		add.selectFromDropdown("s2id_project-type-dropdown", "Client Project");  	
-//		add.selectFromSelect2Dropdown("Client", "Zoila Hauck");  	
-//		add.writeDescription("Quis quisquam cumque quia aut nesciunt quia. Omnis omnis rerum nulla ut quisquam sit. Qui est necessitatibus sit eius omnis.");
-//		add.writeInput("Start date","25-05-2025");
-//        driver.findElement(By.id("start_date")).sendKeys(Keys.ENTER);
-//		add.writeInput("Deadline","30-05-2025");
-//        driver.findElement(By.id("deadline")).sendKeys(Keys.ENTER);
-// 		add.writeInput("Price","1000");
-//		add.selectFromDropdowns("s2id_project_labels", "Urgent");
-//    }
 	public void fillProjectForm(ProjectData projectData) {
 		if (projectData.getTitle() != null) {
 			WebElement titleInput = driver.findElement(By.id("title"));

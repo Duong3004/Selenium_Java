@@ -32,13 +32,17 @@ public class KeywordConstant {
 	
 		
 //	Tang Rise
-		public static final String urlRise = "https://rise.fairsketch.com/signin?redirect=https://rise.fairsketch.com/events";
+		public static final String urlRise = "https://rise.fairsketch.com/projects/all_projects";
 		public static final String usernameRise = "admin@demo.com";
 		public static final String passwordRise = "riseDemo";
 		
+
+///// Parten
+	public static final String urlPar = "https://apodio.dev.apusplatform.com/merchant-product/dashboard";
+	public static final String usernamePar = "apodio@gmail.com";
+	public static final String passwordPar = "aaa";
+	
 	public static final String BROWSER = "chrome";
 
-	
-	
  
 }

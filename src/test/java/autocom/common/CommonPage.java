@@ -25,7 +25,13 @@ public class CommonPage {
 
 	public WebDriver driver;
 	
-    public WebDriver getDriver() {
+    public CommonPage(WebDriver driver2) {
+		// TODO Auto-generated constructor stub
+	}
+    public CommonPage() {
+		// TODO Auto-generated constructor stub
+	}
+	public WebDriver getDriver() {
         return this.driver;
     }
 

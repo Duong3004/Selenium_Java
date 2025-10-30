@@ -1,5 +1,6 @@
 package autotest.page.Rise;
-import java.util.List;
+import java.util.*;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.*;
@@ -40,17 +41,7 @@ public class DashboardCalculator extends CommonPage {
 
     @FindBy(xpath = "//a[@href='https://rise.fairsketch.com/index.php/invoices/index']")
     WebElement openDueLink;
-    /////////  
 
-    @FindBy(xpath = "//a[@href='https://rise.fairsketch.com/index.php/projects/all_projects/1']")
-    WebElement openProjectLink;
-    
-    @FindBy(xpath = "//a[@href='https://rise.fairsketch.com/index.php/projects/all_projects/2']")
-    WebElement openComPLink;
-    
-    @FindBy(xpath = "//a[@href='https://rise.fairsketch.com/index.php/projects/all_projects/3']")
-    WebElement openHoldLink;
-    /////////  
 
     @FindBy(xpath = "//a[@href='https://rise.fairsketch.com/index.php/invoices/index/custom/overdue/USD']")
     WebElement openOverdueLink;
@@ -75,7 +66,12 @@ public class DashboardCalculator extends CommonPage {
         wait.until(ExpectedConditions.elementToBeClickable(linkElement));
         linkElement.click();
         wait.until(ExpectedConditions.visibilityOfAllElements(expectedRows));
+
     }
+    public void goToModul(WebElement modul) {
+        wait.until(ExpectedConditions.elementToBeClickable(modul));
+        modul.click(); 
+        }
 
     public void goToMyOpenTasks() {
         goToSection(openTasksLink, taskRows);
@@ -85,45 +81,38 @@ public class DashboardCalculator extends CommonPage {
         goToSection(openDueLink, invoicesRows);
     }
 
-    public void goToOpenPro() {
-        goToSection(openProjectLink, projectRows);
-    }
 
-    public void goToCompletedPro() {
-        goToSection(openComPLink, projectRows);
-    }
-
-    public void goToHoldPro() {
-        goToSection(openHoldLink, projectRows);
-    }
     public void goToSection1(WebElement linkElement, By rowsLocator) {
         wait.until(ExpectedConditions.elementToBeClickable(linkElement));
         linkElement.click();
 //        driver.findElement(By.xpath("//div[@id='invoice-list-table_processing']")).isDisplayed();
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(rowsLocator));
     }
-
-    public void goToOverdueInv() {
-    	pause(3);
-    	
-        goToSection1(openOverdueLink, By.xpath("//table[@id='invoice-list-table']//tbody/tr"));
+    private void waitForTableLoad(By processingLocator) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(processingLocator));
     }
 
-    public void goToNotpaidInv() {
-        goToSection(openNotpaidLink, invoicesRows);
-    }
+//    public void goToOverdueInv() {
+//    	pause(3);
+//    	
+//        goToSection1(openOverdueLink, By.xpath("//table[@id='invoice-list-table']//tbody/tr"));
+//    }
 
-    public void goToPartiallypaidInv() {
-        goToSection(openPartiallypaidLink, invoicesRows);
-    }
-
-    public void goToFullypaidInv() {
-        goToSection(openFullypaidLink, invoicesRows);
-    }
-
-    public void goToDraftInv() {
-        goToSection(openDraftLink, invoicesRows);
-    }
+//    public void goToNotpaidInv() {
+//        goToSection(openNotpaidLink, invoicesRows);
+//    }
+//
+//    public void goToPartiallypaidInv() {
+//        goToSection(openPartiallypaidLink, invoicesRows);
+//    }
+//
+//    public void goToFullypaidInv() {
+//        goToSection(openFullypaidLink, invoicesRows);
+//    }
+//
+//    public void goToDraftInv() {
+//        goToSection(openDraftLink, invoicesRows);
+//    }
 
     public void selectSizePage(String sizeText, By moduleLocator) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -200,33 +189,97 @@ public class DashboardCalculator extends CommonPage {
     	By projectNextButtonLocator = By.cssSelector("#project-table_next.page-item.next");
     	return countTableRowsWithPagination(projectRowLocator,projectNextButtonLocator);
     }
+    
 
-//
-//    public double getDueFromSale() {
-//        String xpath = "//tr//th[@data-all-page='10']";
-//        try {
-//            WebDriverWait wait = new WebDriverWait(driver,10);
-//            WebElement totalDue = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
-//
-//            JavascriptExecutor js = (JavascriptExecutor) driver;
-//            js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", totalDue);
-//            String dueText = totalDue.getText();
-//
-//            if (dueText == null || dueText.isEmpty()) {
-//                dueText = (String) js.executeScript("return arguments[0].textContent;", totalDue);
-//            }
-//
-//            dueText = dueText.replace("$", "").replace(",", "").trim();
-//
-//            if (dueText.isEmpty()) {
-//                throw new RuntimeException("Giá trị Due là rỗng!");
-//            }
-//
-//            return Double.parseDouble(dueText);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Lỗi khi lấy giá trị Due: " + e.getMessage(), e);
-//        }
-//    }
+    public Map<String, Integer> countStatusesGeneric(
+            By rowLocator,
+            By statusLocator,
+            By nextBtnLi,
+            By sizePageLocator,
+            By processingLocator
+    ) {
+        Map<String, Integer> statusCounts = new HashMap<>();
+        selectSizePage("100", sizePageLocator);
+        waitForTableLoad(processingLocator);
+        pause(1);
+
+        int page = 1;
+
+        while (true) {
+            waitForTableLoad(processingLocator);
+
+            List<WebElement> rows = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(rowLocator));
+
+            for (int i = 0; i < rows.size(); i++) {
+                try {
+                    WebElement row = rows.get(i);
+                    String status = row.findElement(statusLocator).getText().trim();
+                    statusCounts.put(status, statusCounts.getOrDefault(status, 0) + 1);
+                } catch (StaleElementReferenceException e) {
+                    System.out.println("⚠ Row bị stale, bỏ qua hàng " + i);
+                } catch (Exception e) {
+                    System.out.println("‼️ Lỗi xử lý row " + i + ": " + e.getMessage());
+                }
+            }
+
+            try {
+                WebElement nextLi = driver.findElement(nextBtnLi);
+                String classAttr = nextLi.getAttribute("class");
+
+                if (classAttr.contains("disabled")) {
+                    break; 
+                }
+
+                WebElement nextBtn = nextLi.findElement(By.cssSelector("a.page-link"));
+                WebElement firstRowBefore = rows.get(0); // Để check staleness
+
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", nextBtn);
+                nextBtn.click();
+
+                wait.until(ExpectedConditions.stalenessOf(firstRowBefore));
+                waitForTableLoad(processingLocator);
+
+                page++;
+            } catch (Exception e) {
+                System.out.println("🚫 Lỗi khi chuyển trang: " + e.getMessage());
+                break;
+            }
+        }
+
+        return statusCounts;
+    }
+
+
+
+
+    public Map<String, Integer> countAllProjectStatuses() {
+        WebElement modulProject = driver.findElement(By.xpath("//li[contains(@class,'main')]//span[text()='Projects']"));      
+        goToModul(modulProject);
+
+        return countStatusesGeneric(
+            By.cssSelector("#project-table tbody tr"),                   // row
+            By.cssSelector("td:nth-child(8)"),                           // status
+            By.cssSelector("#project-table_next.page-item.next"),        // next
+            By.cssSelector("#project-table_length .select2-container"),  // size per page
+            By.cssSelector("#project-table_processing")                  // processing indicator
+        );
+    }
+
+    public Map<String, Integer> countAllTaskStatuses() {
+        WebElement modulTasks = driver.findElement(By.xpath("//li[contains(@class,'main')]//span[text()='Tasks']"));      
+        goToModul(modulTasks);
+        driver.findElement(By.xpath("//button[text()='All tasks']")).click();
+
+        return countStatusesGeneric(
+            By.cssSelector("#task-table tbody tr"),                   // row
+            By.cssSelector("td a[data-act='update-task-status']"),                           // status
+            By.cssSelector("#task-table_next.page-item.next"),        // next
+            By.cssSelector("#task-table_length .select2-container"),  // size per page
+            By.cssSelector("#task-table_processing")                  // processing indicator
+        );
+    }
+
+
     
     public double calculateActualDue() {
         By rowLocator = By.cssSelector("table#invoice-list-table tbody tr");
@@ -235,17 +288,20 @@ public class DashboardCalculator extends CommonPage {
         By nextBtnLi = By.cssSelector("li.paginate_button.next");
         By taskModule = By.cssSelector("#invoice-list-table_length .select2-container");
         
+        WebElement sale = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Sales']")));
+        sale.click();
+        
+        WebElement invoice = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//li//span[text()='Invoices']")));
+        invoice.click();
+        
+        WebElement invoicesButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Invoices']")));
+        invoicesButton.click();
+        
         double totalDue = 0.0;
         int page = 1;
         
-        wait.until(ExpectedConditions.elementToBeClickable(buttonInvoice));
-     	buttonInvoice.click();
-     	
     	selectSizePage("50",taskModule);
 
-        
-
-     	
         while (true) {
             List<WebElement> rows = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(rowLocator));
 
@@ -297,47 +353,89 @@ public class DashboardCalculator extends CommonPage {
         return totalDue;
     }
     
-    public double calculateActualDues() {
+
+    public Map<String, Double> calculateAmountPerInvoiceStatus() {
+        Map<String, Double> amountByStatus = new HashMap<>();
+        
+     // Khởi tạo tất cả các key cần thiết
+        amountByStatus.put("overdue", 0.0);
+        amountByStatus.put("not paid", 0.0);
+        amountByStatus.put("partially paid", 0.0);
+        amountByStatus.put("fully paid", 0.0);
+        amountByStatus.put("draft", 0.0);
+
+
+        // locator setup
         By rowLocator = By.cssSelector("table#invoice-list-table tbody tr");
+        By totalInvoicedLocator = By.cssSelector("td:nth-child(6)");
+        By paymentReceivedLocator = By.cssSelector("td:nth-child(7)");
         By dueLocator = By.cssSelector("td:nth-child(8)");
+        By statusLocator = By.cssSelector("td:nth-child(9)");
         By nextBtnLi = By.cssSelector("li.paginate_button.next");
         By taskModule = By.cssSelector("#invoice-list-table_length .select2-container");
-
-
-        double totalDue = 0.0;
-        int page = 1;
+        
+        WebElement sale = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Sales']")));
+        sale.click();
+        
+        WebElement invoice = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//li//span[text()='Invoices']")));
+        invoice.click();
+        
+        WebElement invoicesButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='Invoices']")));
+        invoicesButton.click();
+        
         selectSizePage("50", taskModule);
+
         while (true) {
             List<WebElement> rows = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(rowLocator));
-            
+
             if (rows.size() == 1 && rows.get(0).getText().contains("No record found")) {
-                return 0.0;
+                return amountByStatus;
             }
 
-
-            int rowCount = rows.size();
-            for (int i = 0; i < rowCount; i++) {
+            for (WebElement row : rows) {
                 try {
-                    List<WebElement> currentRows = driver.findElements(rowLocator);
-                    WebElement row = currentRows.get(i);
+                    String totalText = row.findElement(totalInvoicedLocator).getText().replaceAll("[^\\d.,]", "").replace(",", "");
+                    String receivedText = row.findElement(paymentReceivedLocator).getText().replaceAll("[^\\d.,]", "").replace(",", "");
+                    String dueText = row.findElement(dueLocator).getText().replaceAll("[^\\d.,]", "").replace(",", "");
+                    
+                    String status = row.findElement(statusLocator).getText().trim().toLowerCase();
+                    double total = totalText.isEmpty() ? 0 : Double.parseDouble(totalText);
+                    double received = receivedText.isEmpty() ? 0 : Double.parseDouble(receivedText);
+                    double due = dueText.isEmpty() ? 0 : Double.parseDouble(dueText);
 
-                    String dueTextRaw = row.findElement(dueLocator).getText();
-                    String dueText = dueTextRaw
-                            .replaceAll("[^\\d.,]", "")
-                            .replace(",", ".")
-                            .replaceAll("(\\.)(?=.*\\.)", "")
-                            .trim();
+                    switch (status) {
+                        case "overdue":
+                        	
+                            amountByStatus.merge("overdue", due, Double::sum);
 
-                    if (!dueText.isEmpty()) {
-                        double due = Double.parseDouble(dueText);
-                        totalDue += due;
+                            if (received == 0) {
+                                amountByStatus.merge("not paid", due, Double::sum);
+                            } else {
+                                amountByStatus.merge("partially paid", total, Double::sum);
+                            }
+                            break;
+                        case "not paid":
+                            amountByStatus.merge("not paid", due, Double::sum);
+                            break;
+                        case "partially paid":
+                            amountByStatus.merge("partially paid", total, Double::sum);
+                            break;
+                        case "fully paid":
+                            amountByStatus.merge("fully paid", total, Double::sum);
+                            break;
+                        case "draft":
+                            amountByStatus.merge("draft", due, Double::sum);
+                            break;
+                        default:
+                            continue; // Bỏ qua các trạng thái không xác định
                     }
-                } catch (StaleElementReferenceException e) {
-                    System.out.println("⚠ Row bị stale, bỏ qua hàng " + i);
+
                 } catch (NumberFormatException e) {
-                    System.out.println("❌ Lỗi chuyển đổi số tiền: '" + e.getMessage() + "'");
+                    System.out.println("‼️ Lỗi định dạng số: " + e.getMessage());
+                } catch (NoSuchElementException e) {
+                    System.out.println("‼️ Không tìm thấy element: " + e.getMessage());
                 } catch (Exception e) {
-                    System.out.println("‼️ Lỗi xử lý row " + i + ": " + e.getMessage());
+                    System.out.println("‼️ Lỗi khi xử lý dòng: " + e.getMessage());
                 }
             }
 
@@ -347,21 +445,21 @@ public class DashboardCalculator extends CommonPage {
 
                 WebElement nextBtn = nextLi.findElement(By.cssSelector("a.page-link"));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", nextBtn);
-
                 wait.until(ExpectedConditions.elementToBeClickable(nextBtn)).click();
                 wait.until(ExpectedConditions.stalenessOf(rows.get(0)));
-                page++;
             } catch (NoSuchElementException e) {
                 break;
             } catch (Exception e) {
-                System.out.println("🚫 Lỗi khi chuyển trang: " + e.getMessage());
+                System.out.println("‼️ Lỗi khi chuyển trang: " + e.getMessage());
                 break;
             }
         }
-
-        return totalDue;
+        return amountByStatus;
     }
-
-
-
+    public void calculateSummaryValues(Map<String, Double> amountByStatus) {
+        double totalInvoiced = amountByStatus.get("partially paid") 
+                             + amountByStatus.get("fully paid") 
+                             + amountByStatus.get("not paid");
+        amountByStatus.put("total invoiced", totalInvoiced);
+    } 
 } 

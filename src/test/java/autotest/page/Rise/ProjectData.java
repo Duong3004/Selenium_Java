@@ -166,5 +166,10 @@ public class ProjectData {
         public ProjectData build() {
             return new ProjectData(this);
         }
+       
     }
+	public static ProjectData of(String title, String type, String client, String description,
+                String startDate, String deadline, String price, String label) {
+		return null;
+	}
 }

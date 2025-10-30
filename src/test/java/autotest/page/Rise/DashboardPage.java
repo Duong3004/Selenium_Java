@@ -23,46 +23,46 @@ public class DashboardPage extends CommonPage {
 	WebElement totalDue;
 	//////
 
-	@FindBy(xpath = "(//div[@class = 'pt-3 pb10 text-center']//h4)[1]")
+	@FindBy(xpath = "//div//span[text() = 'Open']/preceding-sibling::h4")
 	WebElement totalOpen;
 	
-	@FindBy(xpath = "(//div[@class = 'pt-3 pb10 text-center']//h4)[2]")
+	@FindBy(xpath = "//div//span[text() = 'Completed']/preceding-sibling::h4")
 	WebElement totalCompleted;
 	
-	@FindBy(xpath = "(//div[@class = 'pt-3 pb10 text-center']//h4)[3]")
+	@FindBy(xpath = "//div//span[text() = 'Hold']/preceding-sibling::h4")
 	WebElement totalHold;
 	//////
 
 	
-	@FindBy(xpath = "(//div[@id = 'invoice-overview-container']//div[@class='w25p text-end'])[1]")
+	@FindBy(xpath = "//div[contains(., 'Overdue')]/div[@class='w25p text-end']")
 	WebElement totalOverdue;
 	
-	@FindBy(xpath = "(//div[@id = 'invoice-overview-container']//div[@class='w25p text-end'])[2]")
+	@FindBy(xpath = "//div[contains(., 'Not paid')]/div[@class='w25p text-end']")
 	WebElement totalNotpaid;
 	
-	@FindBy(xpath = "(//div[@id = 'invoice-overview-container']//div[@class='w25p text-end'])[3]")
+	@FindBy(xpath = "//div[contains(., 'Partially paid')]/div[@class='w25p text-end']")
 	WebElement totalPartiallypaid;
 	
-	@FindBy(xpath = "(//div[@id = 'invoice-overview-container']//div[@class='w25p text-end'])[4]")
+	@FindBy(xpath = "//div[contains(., 'Fully paid')]/div[@class='w25p text-end']")
 	WebElement totalFullypaid;
 	
-	@FindBy(xpath = "(//div[@id = 'invoice-overview-container']//div[@class='w25p text-end'])[5]")
+	@FindBy(xpath = "//div[contains(., 'Draft')]/div[@class='w25p text-end']")
 	WebElement totalDraft;
 	
 	//////
-	@FindBy(xpath = "(//div[@class='pb-2']//span)[1]")
+	@FindBy(xpath = "//div[contains(., 'To do')]/span")
 	WebElement totalToDoTask;
 	
-	@FindBy(xpath = "(//div[@class='pb-2']//span)[2]")
+	@FindBy(xpath = "//div[contains(., 'In progress')]/span")
 	WebElement totalInProgressTask;
 	
-	@FindBy(xpath = "(//div[@class='pb-2']//span)[3]")
+	@FindBy(xpath = "//div[contains(., 'Review')]/span")
 	WebElement totalReviewTask;
 	
-	@FindBy(xpath = "(//div[@class='pb-2']//span)[4]")
+	@FindBy(xpath = "//div[contains(., 'Done')]/span")
 	WebElement totalDoneTask;
 	
-	@FindBy(xpath = "(//div[@class='pb-2']//span)[5]")
+	@FindBy(xpath = "//div[contains(., 'Expired')]/span")
 	WebElement totalExpiredTask;
 	
 	
@@ -114,16 +114,16 @@ public class DashboardPage extends CommonPage {
         return getTotalInvoiced(totalDraft);
     }
     
-    public double getTotalToDoFromDashboard() {
-        return getTotalInvoiced(totalToDoTask);
+    public int getTotalToDoFromDashboard() {
+        return (int) getTotalInvoiced(totalToDoTask); 
+    }
+
+    public int getTotalReviewFromDashboard() {
+        return (int) getTotalInvoiced(totalReviewTask); 
     }
     
-    public double getTotalInProgressFromDashboard() {
-        return getTotalInvoiced(totalInProgressTask);
-    }
-    
-    public double getTotalReviewFromDashboard() {
-        return getTotalInvoiced(totalReviewTask);
+    public int getTotalInProgressFromDashboard() {
+        return (int) getTotalInvoiced(totalInProgressTask); 
     }
     
     public double getTotalDoneFromDashboard() {

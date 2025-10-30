@@ -3,6 +3,7 @@ package autotest.testcasepage.Rise;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -30,12 +31,21 @@ public class DeleteProjectTest extends CommonPage {
    
     @BeforeTest
     public void setup() {
-        driver = this.startBrower("https://rise.fairsketch.com/projects/all_projects", KeywordConstant.BROWSER);
+    	driver = this.startBrower("https://rise.fairsketch.com", KeywordConstant.BROWSER);
         wait = new WebDriverWait(driver, 10);
         loginPage = new LoginPageRise(driver);
         createPage = new CreateProjectPage(driver);
-        loginPage.login(KeywordConstant.usernameRise, KeywordConstant.passwordRise);
-        Assert.assertEquals(loginPage.getTitle(), "John Doe", "Đăng nhập thất bại");
+//        loginPage.login(KeywordConstant.usernameRise, KeywordConstant.passwordRise);
+//        Assert.assertEquals(loginPage.getTitle(), "John Doe", "Đăng nhập thất bại");
+        
+        Cookie ciSession = new Cookie("ci_session", "81ac440162b8f9fc72186b9ca9665911");
+        Cookie csrfToken = new Cookie("rise_csrf_cookie", "cca74465329e7549dc0600276295008c");
+
+        driver.manage().addCookie(ciSession);
+        driver.manage().addCookie(csrfToken);
+        
+        driver.navigate().to("https://rise.fairsketch.com/projects/all_projects");
+//        driver.navigate().refresh();
     }
 
     @AfterTest
@@ -61,7 +71,7 @@ public class DeleteProjectTest extends CommonPage {
     }
     @Test(priority = 2, description = "Xoá project thành công và kiểm tra không còn hiển thị")
     public void testDeleteProjectSuccess() {
-        final String Project_name = "Online Course Creation and Launch";
+        final String Project_name = "Create task dashboards and reports";
     	createPage.deleteProjectByExactTitle(Project_name);
     	
     	String alerTexxt = driver.findElement(By.xpath("//div[@class='modal-body']//div")).getText();
